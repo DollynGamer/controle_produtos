@@ -26,3 +26,13 @@ class Produto_DAO:
               self._produtos.remove(produto)
               return True
          return False
+    
+    def update(self, produto_atualizado:Produto):
+         produto = self.get_by_id(produto_atualizado._id)
+         if produto:
+              produto._nome = produto_atualizado._nome
+              produto._valor = produto_atualizado._valor
+              produto._estoque = produto_atualizado._estoque
+              return True
+         return False
+    
