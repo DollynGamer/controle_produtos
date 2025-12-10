@@ -51,6 +51,10 @@ class Produto_View:
         estoque_input = input(f"Estoque: [{default_estoque}]: ") or str(default_estoque)
         return int(estoque_input)
     
+    def get_id(self):
+        id_input = input("ID do Produto: ")
+        return int(id_input)
+    
     def get_dados_produto(self, produto=None):
         if produto is None:
             nome = self.get_nome()
@@ -61,9 +65,9 @@ class Produto_View:
             valor = self.get_valor(produto._valor)
             estoque = self.get_estoque(produto._estoque)
         return {
-            "Nome": nome,
-            "Valor": valor,
-            "Estoque": estoque
+            "nome": nome,
+            "valor": valor,
+            "estoque": estoque
         }
     
     def show_produtos(self, produtos):
