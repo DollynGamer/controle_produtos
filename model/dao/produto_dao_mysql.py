@@ -41,6 +41,7 @@ class Produto_DAO(Base_DAO):
             produto = Produto(id, nome, valor, estoque)
         cursor.close()
         conn.close()
+        return produto
 
     def delete(self, id):
         sql = "delete from produto where id = %s"

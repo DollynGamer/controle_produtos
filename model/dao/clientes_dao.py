@@ -1,39 +1,69 @@
 from model.clientes import Clientes
-
-class Clientes_DAO:
-    def __init__(self):
-        self._clientes = []
-        self._id_counter = 1
+from model.dao.base_dao import Base_DAO
     
+class Clientes_DAO(Base_DAO):
     def save(self, cliente:Clientes):
-        cliente._id = self._id_counter
-        self._id_counter += 1
-        self._clientes.append(cliente)
+        sql = """insert into cliente (nome, cpf, email, renda)
+                values (%s, %s, %s, %s)"""
+        
+        values = (cliente._nome, cliente._cpf, cliente._email, cliente._renda)
+
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql, values)
+        cliente._id = cursor.lastrowid
+        conn.commit()
+        cursor.close()
+        conn.close()
         return cliente
     
     def get_all(self):
-        return self._clientes
+        sql = "select id, nome, cpf, email, renda from cliente"
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        clientes = []
+        for(id, nome, cpf, email, renda) in cursor:
+            clientes.append(Clientes(id, nome, cpf, email, renda))
+        cursor.close()
+        conn.close()
+        return clientes
     
     def get_by_id(self, id):
-        for cliente in self._clientes:
-            if cliente._id == id:
-                    return cliente
-        return None
-    
+        sql = """select id, nome, cpf, email, renda from cliente where id = %s"""
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql, (id,))
+        row = cursor.fetchone()
+        cliente = None
+        if row:
+            id, nome, cpf, email, renda = row
+            cliente = Clientes(id, nome, cpf, email, renda)
+        cursor.close()
+        conn.close()
+        return cliente
+
     def delete(self, id):
-        cliente = self.get_by_id(id)
-        if cliente:
-            self._clientes.remove(cliente)
-            return True
-        return False
+        sql = "delete from cliente where id = %s"
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql, (id,))
+        conn.commit()
+        affected_rows = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return affected_rows > 0
     
     def update(self, cliente_atualizado:Clientes):
-        cliente = self.get_by_id(cliente_atualizado._id)
-        if cliente:
-            cliente._nome = cliente_atualizado._nome
-            cliente._cpf = cliente_atualizado._cpf
-            cliente._email = cliente_atualizado._email
-            cliente._renda = cliente_atualizado._renda
-            return True
-        return False
-    
+        sql = """update cliente set nome = %s, cpf = %s, email = %s, renda = %s where id = %s"""
+        
+        values = (cliente_atualizado._nome, cliente_atualizado._cpf, cliente_atualizado._email, cliente_atualizado._renda, cliente_atualizado._id)
+
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql, values)
+        conn.commit()
+        affected_rows = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return affected_rows > 0
