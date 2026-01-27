@@ -1,5 +1,5 @@
 from model.dao.produto_dao_mysql import Produto_DAO
-from view.produto_view import Produto_View
+from view.produto_gui import Produto_View
 from control.produto_controller import Produto_Controller
 
 from model.dao.clientes_dao import Clientes_DAO

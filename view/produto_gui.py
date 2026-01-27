@@ -37,7 +37,7 @@ class Produto_View:
         frame_botoes.pack()
 
         tk.Button(frame_botoes, text="SALVAR NOVO", command=self._acao_adicionar, bg="#d4edda", width=15).pack(side=tk.LEFT, padx=5)
-        tk.Button(frame_botoes, text="ATUALIZAR", command=self.acao_editar, bg="#ff3cd", width=15).pack(side=tk.LEFT, padx=5)
+        tk.Button(frame_botoes, text="ATUALIZAR", command=self._acao_editar, bg="#fff3cd", width=15).pack(side=tk.LEFT, padx=5)
         tk.Button(frame_botoes, text="EXCLUIR", command=self._acao_excluir, bg="#f8d7da", width=15).pack(side=tk.LEFT, padx=5)
         tk.Button(frame_botoes, text="LIMPAR", command=self._limpar_campos, width=15).pack(side=tk.LEFT, padx=5)
 
@@ -58,3 +58,63 @@ class Produto_View:
 
         self.tree.pack(side="left", expand=True, fill="both")
         self.tree.bind("<<TreeviewSelect>>", self._ao_selecionar_tabela)
+
+    def run(self):
+        self.root.after(200, self._acao_listar)
+        self.root.mainloop()
+
+    def get_dados_produto(self, produto_existente=None):
+        try:
+            return{
+                "nome": self.var_nome.get(),
+                "valor": float(self.var_valor.get()),
+                "estoque": int(self.var_estoque.get())
+            }
+        except ValueError:
+            self.show_error("Dados numéricos inválidos.")
+            return None
+        
+    def _acao_adicionar(self):
+        self.controller.add_produto()
+        self._acao_listar(self)
+
+    def _acao_listar(self):
+        if self.controller: self.controller.list_produtos()
+
+    def show_produtos(self, lista):
+        for i in self.tree.get_children(): self.tree.delete(i)
+        for p in lista:
+            self.tree.insert("","end", values=(
+                p._id, p._nome, f"R$ {p._valor:.2f}",
+                p._estoque, f"R$ {(p._valor * p._estoque):.2f}"
+            ))
+
+    def _acao_editar(self):
+        self.controller.update_produto()
+        self._acao_listar()
+
+    def get_id(self, operacao=""):
+        val = self.var_id.get()
+        return int(val) if val else None
+    
+    def _acao_excluir(self):
+        if messagebox.askyesno("Confirmação", "Deseja excluir?"):
+            self.controller.delete_produto()
+            self._acao_listar()
+            self._limpar_campos()
+
+    def _limpar_campos(self):
+        for var in [self.var_id, self.var_nome, self.var_valor, self.var_estoque]: var.set("")
+
+    def _ao_selecionar_tabela(self, event):
+        item_sel = self.tree.selection()
+        if item_sel:
+            v = self.tree.item(item_sel)['values']
+            self.var_id.set(v[0])
+            self.var_nome.set(v[1])
+            self.var_valor.set(str(v[2]).replace("R$ ", ""))
+            self.var_estoque.set(v[3])
+    
+    def show_message(self, txt): messagebox.showinfo("Sucesso", txt)
+
+    def show_error(self, err): messagebox.showerror("Erro", err)
