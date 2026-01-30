@@ -74,7 +74,7 @@ class Fornecedor_Controller:
     def list_fornecedores(self):
         try:
             fornecedores = self.dao.get_all()
-            self.view.show_produtos(fornecedores)
+            self.view.show_fornecedores(fornecedores)
         except Exception as e:
             self.view.show_error(f"Erro ao listar fornecedores: {str(e)}")
 

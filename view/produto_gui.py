@@ -4,7 +4,7 @@ from tkinter import messagebox, ttk
 class Produto_View:
     def __init__(self):
         self.controller = None
-        self.root = tk.Tk()
+        self.root = tk.Toplevel()
         self.root.title("Cadastro de Produtos")
         self.root.geometry("800x600")
 
@@ -61,7 +61,8 @@ class Produto_View:
 
     def run(self):
         self.root.after(200, self._acao_listar)
-        self.root.mainloop()
+        self.root.grab_set()
+        self.root.focus_force()
 
     def get_dados_produto(self, produto_existente=None):
         try:
