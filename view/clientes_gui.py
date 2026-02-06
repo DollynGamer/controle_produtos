@@ -4,9 +4,9 @@ from tkinter import messagebox, ttk
 class Clientes_View:
     def __init__(self):
         self.controller = None
-        self.root = tk.Tk()
+        self.root = tk.Toplevel()
         self.root.title("Cadastro de Clientes")
-        self.root.geometry("800x600")
+        self.root.geometry("850x600")
 
         self.var_id = tk.StringVar()
         self.var_nome = tk.StringVar()
@@ -65,7 +65,8 @@ class Clientes_View:
 
     def run(self):
         self.root.after(200, self._acao_listar)
-        self.root.mainloop()
+        self.root.grab_set()
+        self.root.focus_force()
 
     def get_dados_cliente(self, cliente_existente=None):
         try:

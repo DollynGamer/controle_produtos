@@ -19,6 +19,10 @@ class Main_gui:
         menu_cadastros = tk.Menu(barra_menu, tearoff=0)
         menu_cadastros.add_command(label="Produtos", command=self._abrir_produtos)
         menu_cadastros.add_command(label="Movimentação", command=self._abrir_movimentacao)
+        menu_cadastros.add_command(label="Endereços", command=self._abrir_enderecos)
+        menu_cadastros.add_command(label="Clientes", command=self._abrir_clientes)
+        menu_cadastros.add_command(label="Contatos", command=self._abrir_contatos)
+        menu_cadastros.add_command(label="Fornecedor", command=self._abrir_fornecedor)
         menu_cadastros.add_separator()
         menu_cadastros.add_command(label="Sair", command=self.root.quit)
         
@@ -32,6 +36,22 @@ class Main_gui:
     def _abrir_movimentacao(self):
         if self.controller:
             self.controller.exibir_movimentacao()
+
+    def _abrir_enderecos(self):
+        if self.controller:
+            self.controller.exibir_enderecos()
+
+    def _abrir_clientes(self):
+        if self.controller:
+            self.controller.exibir_clientes()
+
+    def _abrir_contatos(self):
+        if self.controller:
+            self.controller.exibir_contatos()
+
+    def _abrir_fornecedor(self):
+        if self.controller:
+            self.controller.exibir_fornecedor()
 
     def run(self):
         self.root.mainloop()
