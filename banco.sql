@@ -61,4 +61,31 @@ create table if not exists contatos
 	constraint fk_id_fornecedor foreign key (id_fornecedor)
 		references fornecedor(id) on delete cascade
 );
+
+create table if not exists categoria
+(
+	id int not null auto_increment primary key,
+	nome varchar(100) not null
+);
+
+create table if not exists produto_categoria
+(
+	id_produto int not null,
+	id_categoria int not null,
+	primary key (id_produto, id_categoria),
+	constraint fk_n_produto foreign key (id_produto) references produto(id) on delete cascade,
+	constraint fk_n_categoria foreign key (id_categoria) references categoria(id) on delete cascade
+);
+
+insert into categoria (nome) values
+('Eletrônicos'),
+('Informática'),
+('Periféricos'),
+('Escritório'),
+('Gamer'),
+('Áudio e Video'),
+('Redes'),
+('Armazenamento'),
+('Acessórios'),
+('Promoção Especial');
 """

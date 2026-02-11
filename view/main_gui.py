@@ -23,6 +23,8 @@ class Main_gui:
         menu_cadastros.add_command(label="Clientes", command=self._abrir_clientes)
         menu_cadastros.add_command(label="Contatos", command=self._abrir_contatos)
         menu_cadastros.add_command(label="Fornecedor", command=self._abrir_fornecedor)
+        menu_cadastros.add_command(label="Categorias", command=self._abrir_categorias)
+        menu_cadastros.add_command(label="Categorias Versão 2", command=self._abrir_categorias_v2)
         menu_cadastros.add_separator()
         menu_cadastros.add_command(label="Sair", command=self.root.quit)
         
@@ -52,6 +54,14 @@ class Main_gui:
     def _abrir_fornecedor(self):
         if self.controller:
             self.controller.exibir_fornecedor()
+    
+    def _abrir_categorias(self):
+        if self.controller:
+            self.controller.exibir_categorias()
+
+    def _abrir_categorias_v2(self):
+        if self.controller:
+            self.controller.exibir_categorias_v2()
 
     def run(self):
         self.root.mainloop()
