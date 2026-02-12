@@ -15,7 +15,7 @@ class Categoria_Controller:
                 self.view.show_error(f"Erro ao vincular: {e}")
 
     def list_vinculos(self):
-        self.view.show_vinculos(self.dao_cat.get_vinculos_detalhados())
+        self.view.show_vinculos(self.dao_cat.get_vinculos_detalhados_produto())
 
     def abrir_tela(self):
         prods = self.dao_prod.get_all()

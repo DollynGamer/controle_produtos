@@ -22,7 +22,7 @@ class Categoria_V2_View:
         
         self.cb_p = ttk.Combobox(frame_p, textvariable=self.var_p, width=50, state="readonly")
         self.cb_p.pack()
-        self.cb_p.bind("<<ComboboxSelected>>", lambda e: self.controller.carregar_checklists())
+        self.cb_p.bind("<<ComboboxSelected>>", lambda e: self.controller.carregar_checklists_produto())
 
         # 2. Área de Checkboxes com Scroll
         tk.Label(self.root, text="2. Marque as Categorias:", bg="#f0f0f0").pack(pady=(15, 0))
@@ -64,13 +64,13 @@ class Categoria_V2_View:
             var.set(id_cat in lista_ids_vinculados)
 
     def _acao_salvar(self):
-        self.controller.sincronizar()
+        self.controller.sincronizar_produto()
 
     def get_id_produto(self):
         try: return int(self.var_p.get().split(" - ")[0])
         except: return None
 
-    def get_ids_selecionados(self):
+    def get_ids_selecionados_produto(self):
         return [id_cat for id_cat, var in self.check_vars.items() if var.get()]
 
     def run(self):

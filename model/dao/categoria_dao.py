@@ -68,7 +68,7 @@ class Categoria_DAO(Base_DAO):
         cursor.close()
         conn.close()
 
-    def get_vinculos_detalhados(self):
+    def get_vinculos_detalhados_produto(self):
         sql = """select p.id, p.nome, c.nome
                 from produto p
                 join produto_categoria pc on p.id = pc.id_produto
@@ -82,7 +82,7 @@ class Categoria_DAO(Base_DAO):
         conn.close()
         return res
     
-    def sincronizar_vinculos(self, id_produto, lista_ids_categoria):
+    def sincronizar_vinculos_produto(self, id_produto, lista_ids_categoria):
         conn = self._get_connection()
         cursor = conn.cursor()
         try:
@@ -106,6 +106,58 @@ class Categoria_DAO(Base_DAO):
         conn = self._get_connection()
         cursor = conn.cursor()
         cursor.execute(sql, (id_produto,))
+        ids = [row[0] for row in cursor.fetchall()]
+        cursor.close()
+        conn.close()
+        return ids
+    
+    def vincular_fornecedor(self, id_f, id_c):
+        sql = "insert into fornecedor_categoria (id_fornecedor, id_categoria) values (%s, %s)"
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql, (id_f, id_c))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+    def get_vinculos_detalhados_fornecedor(self):
+        sql = """select f.id, f.nome, c.nome
+                from fornecedor f
+                join fornecedor_categoria fc on f.id = fc.id_fornecedor
+                join categoria c on c.id = fc.id_categoria
+                order by f.nome_fantasia"""
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        res = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return res
+    
+    def sincronizar_vinculos_fornecedor(self, id_fornecedor, lista_ids_categoria):
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("delete from fornecedor_categoria where id_fornecedor = %s", (id_fornecedor,))
+
+            if lista_ids_categoria:
+                sql = "insert into fornecedor_categoria (id_fornecedor, id_categoria) values (%s, %s)"
+                for id_cat in lista_ids_categoria:
+                    cursor.execute(sql, (id_fornecedor, id_cat))
+            
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            cursor.close()
+            conn.close()
+    
+    def get_categorias_por_fornecedor(self, id_fornecedor):
+        sql = "select id_categoria from fornecedor_categoria where id_fornecedor = %s"
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql, (id_fornecedor,))
         ids = [row[0] for row in cursor.fetchall()]
         cursor.close()
         conn.close()
