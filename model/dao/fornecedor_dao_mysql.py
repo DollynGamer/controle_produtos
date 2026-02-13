@@ -67,3 +67,55 @@ class Fornecedor_DAO(Base_DAO):
         cursor.close()
         conn.close()
         return affected_rows > 0
+    
+    def vincular_fornecedor(self, id_f, id_p):
+        sql = "insert into fornecedor_produto (id_fornecedor, id_produto) values (%s, %s)"
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql, (id_f, id_p))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+    def get_vinculos_detalhados_fornecedor(self):
+        sql = """select f.id, f.nome_fantasia, p.nome
+                from fornecedor f
+                join fornecedor_produto fp on f.id = fp.id_fornecedor
+                join produto p on p.id = fp.id_produto
+                order by f.nome_fantasia"""
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        res = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return res
+    
+    def sincronizar_vinculos_fornecedor(self, id_fornecedor, lista_ids_produto):
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("delete from fornecedor_produto where id_fornecedor = %s", (id_fornecedor,))
+
+            if lista_ids_produto:
+                sql = "insert into fornecedor_produto (id_fornecedor, id_produto) values (%s, %s)"
+                for id_prod in lista_ids_produto:
+                    cursor.execute(sql, (id_fornecedor, id_prod))
+            
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            cursor.close()
+            conn.close()
+    
+    def get_produtos_por_fornecedor(self, id_fornecedor):
+        sql = "select id_produto from fornecedor_produto where id_fornecedor = %s"
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql, (id_fornecedor,))
+        ids = [row[0] for row in cursor.fetchall()]
+        cursor.close()
+        conn.close()
+        return ids

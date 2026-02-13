@@ -15,6 +15,7 @@ from view.fornecedor_gui import Fornecedor_View
 from view.categoria_gui import Categoria_View
 from view.categoria_v2_gui import Categoria_V2_View
 from view.categoria_fornecedor_gui import Categoria_Fornecedor_View
+from view.produto_fornecedor_gui import Produto_Fornecedor_View
 from control.produto_controller import Produto_Controller
 from control.movimentacao_controller import Movimentacao_Controller
 from control.enderecos_controller import Enderecos_Controller
@@ -90,3 +91,10 @@ class Main_Controller:
         view = Categoria_Fornecedor_View()
         ctrl = Categoria_V2_Controller(dao_cat, dao_prod, dao_for, view)
         ctrl.abrir_tela_fornecedor()
+
+    def exibir_produto_fornecedor(self):
+        dao_prod = Produto_DAO(self.db_config)
+        dao_for = Fornecedor_DAO(self.db_config)
+        view = Produto_Fornecedor_View()
+        ctrl = Fornecedor_Controller(dao_prod, dao_for, view)
+        ctrl.abrir_tela()

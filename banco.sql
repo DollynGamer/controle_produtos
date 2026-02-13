@@ -88,4 +88,22 @@ insert into categoria (nome) values
 ('Armazenamento'),
 ('Acessórios'),
 ('Promoção Especial');
+
+create table if not exists fornecedor_categoria
+(
+	id_fornecedor int not null,
+	id_categoria int not null,
+	primary key (id_fornecedor, id_categoria),
+	constraint fk_n_fornecedor foreign key (id_fornecedor) references fornecedor(id) on delete cascade,
+	constraint fk_nn_categoria foreign key (id_categoria) references categoria(id) on delete cascade
+);
+
+create table if not exists fornecedor_produto
+(
+	id_fornecedor int not null,
+	id_produto int not null,
+	primary key (id_fornecedor, id_produto),
+	constraint fk_nn_fornecedor foreign key (id_fornecedor) references fornecedor(id) on delete cascade,
+	constraint fk_nn_produto foreign key (id_produto) references produto(id) on delete cascade
+);
 """

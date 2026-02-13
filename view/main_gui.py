@@ -26,6 +26,7 @@ class Main_gui:
         menu_cadastros.add_command(label="Categorias", command=self._abrir_categorias)
         menu_cadastros.add_command(label="Categorias Versão 2", command=self._abrir_categorias_v2)
         menu_cadastros.add_command(label="Categorias de Fornecedores", command=self._abrir_categorias_fornecedor)
+        menu_cadastros.add_command(label="Produtos de Fornecedores", command=self._abrir_produto_fornecedor)
         menu_cadastros.add_separator()
         menu_cadastros.add_command(label="Sair", command=self.root.quit)
         
@@ -67,6 +68,10 @@ class Main_gui:
     def _abrir_categorias_fornecedor(self):
         if self.controller:
             self.controller.exibir_categorias_fornecedor()
+    
+    def _abrir_produto_fornecedor(self):
+        if self.controller:
+            self.controller.exibir_produto_fornecedor()
 
     def run(self):
         self.root.mainloop()

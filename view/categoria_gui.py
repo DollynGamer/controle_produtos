@@ -35,6 +35,9 @@ class Categoria_View:
         self.tree.heading("p", text="Produto")
         self.tree.heading("c", text="Categoria")
         self.tree.pack(expand=True, fill="both", padx=20, pady=10)
+        self.tree.column("id", anchor="center")
+        self.tree.column("p", anchor="center")
+        self.tree.column("c", anchor="center")
 
     def _acao_vincular(self):
         self.controller.add_vinculo()
